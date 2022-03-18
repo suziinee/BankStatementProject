@@ -5,16 +5,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.List;
 
 import dev.bank.bankstatement.data.BankStatementTSVParser;
 import dev.bank.bankstatement.model.BankTransaction;
+import dev.bank.bankstatement.service.BankStatementProcessor;
 
 public class BankStatementAnalyzer {
     
     private static final String RESOURCES = "src/main/resources/";
-
     public static void main(String[] args) throws IOException {
         
         //파일 입출력
@@ -25,36 +24,19 @@ public class BankStatementAnalyzer {
         BankStatementTSVParser bankStatementTSVParser = new BankStatementTSVParser(); 
         List<BankTransaction> bankTransactions = bankStatementTSVParser.parseLinesFromTSV(lines);
 
-        //입출금 내역 연산 및 출력
-        System.out.println("입출력 내역의 총합은 " + calculateTotalAmount(bankTransactions) + "입니다.");
-
-        /* 2번째 요구사항, 월 별 입출금 내역 구하기 */
-        System.out.println("1월의 입출금 내역은 " + selectInMonth(bankTransactions, Month.JANUARY));
+        //입출금 내역 연산
+        BankStatementProcessor bankStatementProcessor = new BankStatementProcessor(bankTransactions);
+        
+        //입출금 내역 출력
+        collectSummary(bankStatementProcessor);
     }
 
 
-    public static double calculateTotalAmount(List<BankTransaction> bankTransactions) {
+    private static void collectSummary(BankStatementProcessor bankStatementProcessor) {
 
-        double total = 0d;
-
-        for (BankTransaction bankTransaction : bankTransactions) {
-            total += bankTransaction.getAmount();
-        }
-
-        return total;
+        System.out.println("총 입출금 내역은 " + bankStatementProcessor.calculateTotalAmount() + "입니다.");
+        System.out.println("1월의 입출금 내역은 " + bankStatementProcessor.calculateTotalInMonth(Month.JANUARY));
+        System.out.println("Salary(급여) 카테고리의 내역은 " + bankStatementProcessor.calculateTotalForCategory("Salary"));
     }
-
-
-    /* findTransactionsInJanuary()에서 다른 월도 조회할 수 있도록 변경 */
-    public static List<BankTransaction> selectInMonth(List<BankTransaction> bankTransactions, Month month) {
-
-        final List<BankTransaction> bankTransactionsInMonth = new ArrayList<>();
-
-        for (BankTransaction bankTransaction : bankTransactions) {
-            if (bankTransaction.getDate().getMonth() == month) 
-                bankTransactionsInMonth.add(bankTransaction);
-        }
-
-        return bankTransactionsInMonth;
-    }
+    
 }
