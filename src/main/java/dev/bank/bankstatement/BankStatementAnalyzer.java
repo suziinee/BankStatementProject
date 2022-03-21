@@ -7,22 +7,22 @@ import java.nio.file.Paths;
 import java.time.Month;
 import java.util.List;
 
-import dev.bank.bankstatement.data.BankStatementTSVParser;
+import dev.bank.bankstatement.data.BankStatementParser;
 import dev.bank.bankstatement.model.BankTransaction;
 import dev.bank.bankstatement.service.BankStatementProcessor;
 
 public class BankStatementAnalyzer {
     
     private static final String RESOURCES = "src/main/resources/";
-    public static void main(String[] args) throws IOException {
+
+    public void analyze(String fileName, BankStatementParser bankStatementParser) throws IOException {
         
         //파일 입출력
-        final Path path = Paths.get(RESOURCES + "bank-data-simple.txt");
+        final Path path = Paths.get(RESOURCES + fileName);
         final List<String> lines = Files.readAllLines(path);
 
         //데이터 파싱
-        BankStatementTSVParser bankStatementTSVParser = new BankStatementTSVParser(); 
-        List<BankTransaction> bankTransactions = bankStatementTSVParser.parseLinesFromTSV(lines);
+        List<BankTransaction> bankTransactions = bankStatementParser.parseLinesFrom(lines);
 
         //입출금 내역 연산
         BankStatementProcessor bankStatementProcessor = new BankStatementProcessor(bankTransactions);
