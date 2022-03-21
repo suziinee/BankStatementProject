@@ -14,8 +14,12 @@ import dev.bank.bankstatement.service.BankStatementProcessor;
 public class BankStatementAnalyzer {
     
     private static final String RESOURCES = "src/main/resources/";
+    private final BankStatementParser bankStatementParser;
+    public BankStatementAnalyzer(BankStatementParser bankStatementParser) {
+        this.bankStatementParser = bankStatementParser;
+    }
 
-    public void analyze(String fileName, BankStatementParser bankStatementParser) throws IOException {
+    public void analyze(String fileName) throws IOException {
         
         //파일 입출력
         final Path path = Paths.get(RESOURCES + fileName);
@@ -30,7 +34,7 @@ public class BankStatementAnalyzer {
         //입출금 내역 출력
         collectSummary(bankStatementProcessor);
     }
-
+    
 
     private static void collectSummary(BankStatementProcessor bankStatementProcessor) {
 
