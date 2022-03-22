@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import dev.bank.bankstatement.model.BankTransaction;
 
+@Component("bankStatementParser")
 public class BankStatementCSVParser implements BankStatementParser {
 
     private static final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("dd-MM-yyyy");

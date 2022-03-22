@@ -9,6 +9,7 @@ import java.util.List;
 
 import dev.bank.bankstatement.model.BankTransaction;
 
+@Component 
 public class BankStatementTSVParser implements BankStatementParser {
     
     /* 멤버 변수 */
